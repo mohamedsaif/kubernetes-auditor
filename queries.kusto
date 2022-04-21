@@ -1,0 +1,63 @@
+// Usage overview of AzureDiagnostics
+AzureDiagnostics
+| where ResourceType == "MANAGEDCLUSTERS"
+| summarize count() by Category
+
+// General queries (depending on what is enabled)
+AzureDiagnostics 
+| where Category == "kube-apiserver"
+
+AzureDiagnostics 
+| where Category == "kube-audit"
+
+AzureDiagnostics 
+| where Category == "kube-audit-admin"
+
+AzureDiagnostics 
+| where Category == "kube-controller-manager"
+
+AzureDiagnostics 
+| where Category == "kube-scheduler"
+
+// Custom log search query for alerts
+AzureDiagnostics 
+| where Resource == "AKS-WEU"
+| where Category == "kube-audit-admin"
+| where log_s has "node-resolver-ds"
+| where log_s has_any ("\"verb\":\"patch\"",  "\"verb\":\"delete\"" )
+
+AzureDiagnostics 
+| where Resource == "AKS-WEU"
+| where Category == "kube-audit-admin"
+| where log_s has "node-resolver-ds"
+| where log_s has "\"verb\":\"create\""
+
+// Monitoring usage over a 31 day period
+Usage 
+| where TimeGenerated > startofday(ago(31d))| where IsBillable == true
+| where TimeGenerated > startofday(ago(31d))
+| where IsBillable == true
+| summarize BillableDataGB = sum(Quantity) / 1000. by bin(TimeGenerated, 1d), DataType | render barchart
+
+// Other container insights queries that might be of interest
+KubeEvents
+| where not(isempty(Namespace))
+| sort by TimeGenerated desc
+| render table
+
+AzureDiagnostics
+| where Category == "kube-aduit-admin"
+| where log_s contains "node-resolver"
+| where Resource == "AKS-WEU"
+| project log_s
+
+AzureDiagnostics
+| where Category == "kube-controller-manager"
+| where Resource == "AKS-WEU"
+| project log_s
+
+AzureDiagnostics 
+| where Resource == "AKS-WEU"
+| where Category == "kube-audit-admin"
+| where log_s has "node-resolver-ds"
+| where log_s has_any ("\"verb\":\"patch\"",  "\"verb\":\"delete\"" )
