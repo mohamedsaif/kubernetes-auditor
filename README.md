@@ -41,3 +41,24 @@ Using Azure Portal under AKS -> Monitoring -> Diagnostic settings you will find 
 ![aks-diagnostics](/res/aks-diagnostics.jpg)
 
 Here I will be interested in **kube-audit-admin** to monitor specific actions on particular deployment which let's say is critical to my AKS cluster operational health.
+
+### View the diagnostic logs
+
+In order to create alerts, we need a good understanding of the logs.
+
+Below are few queries that you can leverage to get started:
+
+```kusto
+
+// View all captured kube-audit-admin logs
+AzureDiagnostics 
+| where Category == "kube-audit-admin"
+
+//View logs specific to particular deployment and verbs:
+AzureDiagnostics 
+| where Resource == "AKS-WEU"
+| where Category == "kube-audit-admin"
+| where log_s has "node-resolver-ds"
+| where log_s has_any ("\"verb\":\"patch\"",  "\"verb\":\"delete\"" )
+
+```
