@@ -9,10 +9,10 @@
             "monitorCondition": "Fired",
             "monitoringService": "Log Alerts V2",
             "alertTargetIDs": [
-                "/subscriptions/SUBID/resourcegroups/RG/providers/microsoft.containerservice/managedclusters/RG"
+                "/subscriptions/SUBID/resourcegroups/RG/providers/microsoft.containerservice/managedclusters/AKS_NAME"
             ],
             "configurationItems": [
-                "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/RG/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/RG"
+                "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/RG/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/AKS_NAME"
             ],
             "originAlertId": "41818fec-7438-4edc-92f8-35361cb21bc0",
             "firedDateTime": "2022-05-19T09:38:24.452365Z",

@@ -190,6 +190,34 @@ Create a new Control - For each action as our outer loop to go through the allOf
 
 ![logic-app-outer-loop](./res/logic-app-outer-loop.jpg)
 
-It is now time to retrieve the actual results from Log workspace through Azure Monitor Logs - Run query and list results action:
+It is now time to retrieve the actual results from Log workspace through Azure Monitor Logs - Run query and list results action (this creates behind the scenes a "service principal" account to be used to access the target workspace):
 
 ![logic-app-log-search](./res/logic-app-log-search.jpg)
+
+Still inside the outer loop, we will create a new nested loop for each row returned from the Log Analytics query:
+- Looped items will be set to the **value** field of the log query action
+- Add json parse action to parse the log_s field of the looped items (log_s sample to generate the schema is [sample-log_s-result.json](./sample-log_s-result.json))
+- Add append to array action to add a new item to the Actions variable initialized earlier (notice that each Item I add is a valid json object)
+
+![logic-app-inner-loop](./res/logic-app-inner-loop-details.jpg)
+
+That conclude both the outer and inner loops actions.
+
+The last 2 steps are:
+- Create HTML table from the Actions array variable
+- Posting the message to a teams Channel (you will need to sign in to your Microsoft teams account)
+    - I would highly recommend going to your teams app and create a new team to be used for the notifications
+![logic-app-teams](./res/logic-app-teams.jpg)
+
+That is it, you can save the logic app now.
+
+To test the functionality, click on Run Trigger and select option with payload (for the sample payload body, you can use [sample-alert-post-request.json](./sample-alert-post-request.json))
+
+Click on View monitoring view to see the execution results:
+
+![logic-app-run](./res/logic-app-run.jpg)
+
+Results should look like this:
+
+![logic-app-run-results](./res/logic-app-run-results.jpg)
+
