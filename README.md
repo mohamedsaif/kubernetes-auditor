@@ -125,3 +125,17 @@ Back at the Alerts view in Azure Portal, open the **Alert Rules** to view the ne
 ![new-alert-rules](./res/new-alert-rules.jpg)
 
 >NOTE: It might take couple of mins for the alert rule to be visible in table of alerts.
+
+After 5 mins+-, you should see new alert was raised for the rule that we just created:
+
+![new-alert-fired](./res/new-alert-fired.jpg)
+
+All good here so far.
+
+## Logic App notifier
+
+The scenario I'm after here is to built a logic app that will be used as an action to the alert to post a **Microsoft Teams** message when the alert is fired.
+
+The benefit of using Logic Apps here is the graphical designer, amazing amount of built-in connectors and sufficient workflow and data control components that can allow sophisticated and tailored notification experience.
+
+>NOTE: Although I'm using Microsoft Teams to post alert messages, you still can easily replace it with other connected systems.
