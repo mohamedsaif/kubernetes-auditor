@@ -211,7 +211,7 @@ The last 2 steps are:
 
 That is it, you can save the logic app now.
 
-To test the functionality, click on Run Trigger and select option with payload (for the sample payload body, you can use [sample-alert-post-request.json](./sample-alert-post-request.json))
+To test the functionality, click on Run Trigger and select option with payload (for the sample payload body, you can use [sample-alert-post-request.json](./sample-alert-post-request.json) but you might need to change windowStartTime, windowEndTime and searchQuery to reflect your environment)
 
 Click on View monitoring view to see the execution results:
 
@@ -221,3 +221,4 @@ Results should look like this:
 
 ![logic-app-run-results](./res/logic-app-run-results.jpg)
 
+![logic-app-run-results-table](./res/logic-app-run-results-table.jpg)

@@ -27,7 +27,7 @@
                 "windowSize": "PT5M",
                 "allOf": [
                     {
-                        "searchQuery": "AzureDiagnostics \n| where Resource == \"RG\"\n| where Category == \"kube-audit-admin\"\n| where log_s has \"coredns\"\n| where log_s has_any (\"\\\"verb\\\":\\\"create\\\"\" )\n",
+                        "searchQuery": "AzureDiagnostics \n| where Category == \"kube-audit-admin\"\n| where log_s has \"coredns\"\n| where log_s has_any (\"\\\"verb\\\":\\\"create\\\"\" )\n",
                         "metricMeasureColumn": null,
                         "targetResourceTypes": "['Microsoft.ContainerService/managedClusters']",
                         "operator": "GreaterThanOrEqual",
