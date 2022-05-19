@@ -58,7 +58,70 @@ AzureDiagnostics
 AzureDiagnostics 
 | where Resource == "AKS-WEU"
 | where Category == "kube-audit-admin"
-| where log_s has "node-resolver-ds"
+| where log_s has "CUSTOM_WORKLOAD_NAME"
 | where log_s has_any ("\"verb\":\"patch\"",  "\"verb\":\"delete\"" )
+| where TimeGenerated > datetime(2022-05-19T09:32:52Z) and TimeGenerated < datetime(2022-05-19T09:37:52Z)
 
 ```
+
+Play with the time ranges and different where cluases to optimize the query that you need.
+
+### Selecting alert query(s)
+
+After looking at the logs, you should already defined one or more specific queries that you want to be alerted on.
+
+Just for demonstration, I will monitor the ```coredns``` related events for only the ```create``` verb.
+
+```kusto
+
+AzureDiagnostics 
+| where Category == "kube-audit-admin"
+| where log_s has "coredns"
+| where log_s has_any ("\"verb\":\"create\"")
+
+```
+
+Notice that the above query do not filter on Resource Id like the sample before.
+
+This is to allow me to receive logs from different AKS clusters connected to the same log analytics workspace (but I will separate the alerts based on the cluster resource id).
+
+## Azure alert rule provisioning
+
+In Azure Portal, search for Alerts to go the central alerts dashboard.
+
+From there, you will see option to created new alert rule:
+
+![new-alert](./res/new-alert.jpg)
+
+First thing we need to select is the scope, here I will select a specific log analytics workspace that I configured my AKS cluster diagnostic settings with:
+
+![new-alert-scope](./res/new-alert-scope.jpg)
+
+Moving the the condition, we need to define the signal first, which will be log custom search:
+
+![new-alert-signal](./res/new-alert-signal.jpg)
+
+Now I'm ready to define my conditions related to this alert rule:
+
+![new-alert-condition](./res/new-alert-condition.jpg)
+
+Notice in the above screenshot, I have configured the following:
+
+- Log query: based on the selected query on the previous steps
+- Measurement: will be based on table rows counted every 5 mins
+- Dimensioning: here I'm splitting the results based on Resource Id, which in this case will be the AKS cluster and any future clusters connected.
+- For the alert logic, I'm firing the alert every 5 mins if the query returned more than 0 rows
+
+Next, I would skip actions as it will be updated later and head to details tab:
+
+![new-alert-details](./res/new-alert-details.jpg)
+
+Note here you just need to adjust these values based on you preference.
+
+Now just enter any needed resource tags and create the alert.
+
+Back at the Alerts view in Azure Portal, open the **Alert Rules** to view the newly created rule:
+
+![new-alert-rules](./res/new-alert-rules.jpg)
+
+>NOTE: It might take couple of mins for the alert rule to be visible in table of alerts.

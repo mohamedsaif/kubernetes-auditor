@@ -1,0 +1,38 @@
+{
+    "kind": "Event",
+    "apiVersion": "audit.k8s.io/v1",
+    "level": "Metadata",
+    "auditID": "eb0c3b95-b2df-484c-83a3-e6d4f7ac30a9",
+    "stage": "ResponseComplete",
+    "requestURI": "/api/v1/namespaces/kube-system/configmaps?fieldManager=kubectl-create",
+    "verb": "create",
+    "user": {
+        "username": "aksService",
+        "groups": [
+            "system:masters",
+            "system:authenticated"
+        ]
+    },
+    "sourceIPs": [
+        "172.31.39.167"
+    ],
+    "userAgent": "kubectl/v1.22.6 (linux/amd64) kubernetes/0795921",
+    "objectRef": {
+        "resource": "configmaps",
+        "namespace": "kube-system",
+        "name": "coredns-custom",
+        "apiVersion": "v1"
+    },
+    "responseStatus": {
+        "metadata": {},
+        "status": "Failure",
+        "reason": "AlreadyExists",
+        "code": 409
+    },
+    "requestReceivedTimestamp": "2022-05-19T09:37:25.566260Z",
+    "stageTimestamp": "2022-05-19T09:37:25.582218Z",
+    "annotations": {
+        "authorization.k8s.io/decision": "allow",
+        "authorization.k8s.io/reason": ""
+    }
+}

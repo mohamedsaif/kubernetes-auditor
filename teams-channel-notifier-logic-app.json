@@ -1,0 +1,454 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Create_Actions_HTML_table": {
+                "inputs": {
+                    "format": "HTML",
+                    "from": "@variables('Actions')"
+                },
+                "runAfter": {
+                    "For_each_Resource": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Table"
+            },
+            "For_each_Resource": {
+                "actions": {
+                    "For_Each_Resource_Result_Log": {
+                        "actions": {
+                            "Append_to_Actions_array": {
+                                "inputs": {
+                                    "name": "Actions",
+                                    "value": {
+                                        "RecievedAt": "@{body('LogEntryParse')?['requestReceivedTimestamp']}",
+                                        "Request": "@{body('LogEntryParse')?['requestURI']}",
+                                        "User": "@{body('LogEntryParse')?['user']?['username']}",
+                                        "Verb": "@{body('LogEntryParse')?['verb']}"
+                                    }
+                                },
+                                "runAfter": {
+                                    "LogEntryParse": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "AppendToArrayVariable"
+                            },
+                            "LogEntryParse": {
+                                "inputs": {
+                                    "content": "@items('For_Each_Resource_Result_Log')?['log_s']",
+                                    "schema": {
+                                        "properties": {
+                                            "annotations": {
+                                                "properties": {
+                                                    "authorization.k8s.io/decision": {
+                                                        "type": "string"
+                                                    },
+                                                    "authorization.k8s.io/reason": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "apiVersion": {
+                                                "type": "string"
+                                            },
+                                            "auditID": {
+                                                "type": "string"
+                                            },
+                                            "kind": {
+                                                "type": "string"
+                                            },
+                                            "level": {
+                                                "type": "string"
+                                            },
+                                            "objectRef": {
+                                                "properties": {
+                                                    "apiVersion": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "namespace": {
+                                                        "type": "string"
+                                                    },
+                                                    "resource": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "requestReceivedTimestamp": {
+                                                "type": "string"
+                                            },
+                                            "requestURI": {
+                                                "type": "string"
+                                            },
+                                            "responseStatus": {
+                                                "properties": {
+                                                    "code": {
+                                                        "type": "integer"
+                                                    },
+                                                    "metadata": {
+                                                        "properties": {},
+                                                        "type": "object"
+                                                    },
+                                                    "reason": {
+                                                        "type": "string"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "sourceIPs": {
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "type": "array"
+                                            },
+                                            "stage": {
+                                                "type": "string"
+                                            },
+                                            "stageTimestamp": {
+                                                "type": "string"
+                                            },
+                                            "user": {
+                                                "properties": {
+                                                    "groups": {
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "type": "array"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "userAgent": {
+                                                "type": "string"
+                                            },
+                                            "verb": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "runAfter": {},
+                                "type": "ParseJson"
+                            }
+                        },
+                        "foreach": "@body('Run_Alert_Filtered_Query')?['value']",
+                        "runAfter": {
+                            "Run_Alert_Filtered_Query": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Foreach"
+                    },
+                    "Run_Alert_Filtered_Query": {
+                        "inputs": {
+                            "body": "@{items('For_each_Resource')?['searchQuery']} \n| where TimeGenerated > datetime(@{triggerBody()?['data']?['alertContext']?['condition']?['windowStartTime']}) and TimeGenerated < datetime(@{triggerBody()?['data']?['alertContext']?['condition']?['windowEndTime']})",
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['azuremonitorlogs']['connectionId']"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/queryData",
+                            "queries": {
+                                "resourcegroups": "DefaultResourceGroup-WEU",
+                                "resourcename": "RG-logs",
+                                "resourcetype": "Log Analytics Workspace",
+                                "subscriptions": "SUBID",
+                                "timerange": "TimeGenerated > datetime(@{triggerBody()?['data']?['alertContext']?['condition']?['windowStartTime']}) and TimeGenerated < datetime(@{triggerBody()?['data']?['alertContext']?['condition']?['windowEndTime']})"
+                            }
+                        },
+                        "runAfter": {},
+                        "runtimeConfiguration": {
+                            "staticResult": {
+                                "name": "Run_query_and_list_results0",
+                                "staticResultOptions": "Disabled"
+                            }
+                        },
+                        "type": "ApiConnection"
+                    }
+                },
+                "foreach": "@triggerBody()?['data']?['alertContext']?['condition']?['allOf']",
+                "runAfter": {
+                    "Initialize_Actions_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Foreach"
+            },
+            "Initialize_Actions_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "Actions",
+                            "type": "array"
+                        }
+                    ]
+                },
+                "runAfter": {},
+                "type": "InitializeVariable"
+            },
+            "Post_message_in_a_chat_or_channel": {
+                "inputs": {
+                    "body": {
+                        "messageBody": "<p><br>\n(<strong>@{triggerBody()?['data']?['essentials']?['alertRule']}</strong>) detected (<strong>@{length(variables('Actions'))}</strong>) actions:<br>\n<br>\n@{body('Create_Actions_HTML_table')}<br>\n</p>",
+                        "recipient": {
+                            "channelId": "19:FG76Gr4xyxaSn6ZnyfSO4DigkMYlW4m2MzWdO_8vQv41@thread.tacv2",
+                            "groupId": "eb14be2e-690a-4d37-81f3-37129285edf4"
+                        }
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['teams']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/beta/teams/conversation/message/poster/Flow bot/location/@{encodeURIComponent('Channel')}"
+                },
+                "runAfter": {
+                    "Create_Actions_HTML_table": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "staticResults": {
+            "Run_query_and_list_results0": {
+                "outputs": {
+                    "headers": {},
+                    "statusCode": "OK"
+                },
+                "status": "Succeeded"
+            }
+        },
+        "triggers": {
+            "manual": {
+                "inputs": {
+                    "schema": {
+                        "properties": {
+                            "data": {
+                                "properties": {
+                                    "alertContext": {
+                                        "properties": {
+                                            "condition": {
+                                                "properties": {
+                                                    "allOf": {
+                                                        "items": {
+                                                            "properties": {
+                                                                "dimensions": {
+                                                                    "items": {
+                                                                        "properties": {
+                                                                            "name": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "value": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        },
+                                                                        "required": [
+                                                                            "name",
+                                                                            "value"
+                                                                        ],
+                                                                        "type": "object"
+                                                                    },
+                                                                    "type": "array"
+                                                                },
+                                                                "failingPeriods": {
+                                                                    "properties": {
+                                                                        "minFailingPeriodsToAlert": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "numberOfEvaluationPeriods": {
+                                                                            "type": "integer"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "linkToFilteredSearchResultsAPI": {
+                                                                    "type": "string"
+                                                                },
+                                                                "linkToFilteredSearchResultsUI": {
+                                                                    "type": "string"
+                                                                },
+                                                                "linkToSearchResultsAPI": {
+                                                                    "type": "string"
+                                                                },
+                                                                "linkToSearchResultsUI": {
+                                                                    "type": "string"
+                                                                },
+                                                                "metricMeasureColumn": {
+                                                                    "type": "string"
+                                                                },
+                                                                "metricValue": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "operator": {
+                                                                    "type": "string"
+                                                                },
+                                                                "searchQuery": {
+                                                                    "type": "string"
+                                                                },
+                                                                "targetResourceTypes": {
+                                                                    "type": "string"
+                                                                },
+                                                                "threshold": {
+                                                                    "type": "string"
+                                                                },
+                                                                "timeAggregation": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "searchQuery",
+                                                                "metricMeasureColumn",
+                                                                "targetResourceTypes",
+                                                                "operator",
+                                                                "threshold",
+                                                                "timeAggregation",
+                                                                "dimensions",
+                                                                "metricValue",
+                                                                "failingPeriods",
+                                                                "linkToSearchResultsUI",
+                                                                "linkToFilteredSearchResultsUI",
+                                                                "linkToSearchResultsAPI",
+                                                                "linkToFilteredSearchResultsAPI"
+                                                            ],
+                                                            "type": "object"
+                                                        },
+                                                        "type": "array"
+                                                    },
+                                                    "windowEndTime": {
+                                                        "type": "string"
+                                                    },
+                                                    "windowSize": {
+                                                        "type": "string"
+                                                    },
+                                                    "windowStartTime": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "conditionType": {
+                                                "type": "string"
+                                            },
+                                            "properties": {
+                                                "properties": {
+                                                    "name1": {
+                                                        "type": "string"
+                                                    },
+                                                    "name2": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "essentials": {
+                                        "properties": {
+                                            "alertContextVersion": {
+                                                "type": "string"
+                                            },
+                                            "alertId": {
+                                                "type": "string"
+                                            },
+                                            "alertRule": {
+                                                "type": "string"
+                                            },
+                                            "alertTargetIDs": {
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "type": "array"
+                                            },
+                                            "configurationItems": {
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "type": "array"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "essentialsVersion": {
+                                                "type": "string"
+                                            },
+                                            "firedDateTime": {
+                                                "type": "string"
+                                            },
+                                            "monitorCondition": {
+                                                "type": "string"
+                                            },
+                                            "monitoringService": {
+                                                "type": "string"
+                                            },
+                                            "originAlertId": {
+                                                "type": "string"
+                                            },
+                                            "resolvedDateTime": {
+                                                "type": "string"
+                                            },
+                                            "severity": {
+                                                "type": "string"
+                                            },
+                                            "signalType": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "schemaId": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "kind": "Http",
+                "type": "Request"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "azuremonitorlogs": {
+                    "connectionId": "/subscriptions/SUBID/resourceGroups/RG/providers/Microsoft.Web/connections/azuremonitorlogs",
+                    "connectionName": "azuremonitorlogs",
+                    "id": "/subscriptions/SUBID/providers/Microsoft.Web/locations/westeurope/managedApis/azuremonitorlogs"
+                },
+                "teams": {
+                    "connectionId": "/subscriptions/SUBID/resourceGroups/RG/providers/Microsoft.Web/connections/teams",
+                    "connectionName": "teams",
+                    "id": "/subscriptions/SUBID/providers/Microsoft.Web/locations/westeurope/managedApis/teams"
+                }
+            }
+        }
+    }
+}
