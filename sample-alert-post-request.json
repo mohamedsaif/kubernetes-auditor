@@ -1,0 +1,59 @@
+{
+    "schemaId": "azureMonitorCommonAlertSchema",
+    "data": {
+        "essentials": {
+            "alertId": "/subscriptions/SUBID/providers/Microsoft.AlertsManagement/alerts/93ad71b9-9109-d192-1335-de986c406e7c",
+            "alertRule": "CoreDNS-Create",
+            "severity": "Sev3",
+            "signalType": "Log",
+            "monitorCondition": "Fired",
+            "monitoringService": "Log Alerts V2",
+            "alertTargetIDs": [
+                "/subscriptions/SUBID/resourcegroups/RG/providers/microsoft.containerservice/managedclusters/RG"
+            ],
+            "configurationItems": [
+                "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/RG/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/RG"
+            ],
+            "originAlertId": "41818fec-7438-4edc-92f8-35361cb21bc0",
+            "firedDateTime": "2022-05-19T09:38:24.452365Z",
+            "description": "",
+            "essentialsVersion": "1.0",
+            "alertContextVersion": "1.0"
+        },
+        "alertContext": {
+            "properties": null,
+            "conditionType": "LogQueryCriteria",
+            "condition": {
+                "windowSize": "PT5M",
+                "allOf": [
+                    {
+                        "searchQuery": "AzureDiagnostics \n| where Resource == \"RG\"\n| where Category == \"kube-audit-admin\"\n| where log_s has \"coredns\"\n| where log_s has_any (\"\\\"verb\\\":\\\"create\\\"\" )\n",
+                        "metricMeasureColumn": null,
+                        "targetResourceTypes": "['Microsoft.ContainerService/managedClusters']",
+                        "operator": "GreaterThanOrEqual",
+                        "threshold": "2",
+                        "timeAggregation": "Count",
+                        "dimensions": [
+                            {
+                                "name": "ResourceId",
+                                "value": "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/RG/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/RG"
+                            }
+                        ],
+                        "metricValue": 2.0,
+                        "failingPeriods": {
+                            "numberOfEvaluationPeriods": 1,
+                            "minFailingPeriodsToAlert": 1
+                        },
+                        "linkToSearchResultsUI": "https://portal.azure.com#@SUBID/blade/Microsoft_Azure_Monitoring_Logs/LogsBlade/source/Alerts.EmailLinks/scopeXYZ",
+                        "linkToFilteredSearchResultsUI": "https://portal.azure.com#@SUBID/blade/Microsoft_Azure_Monitoring_Logs/LogsBlade/source/Alerts.EmailLinks/scope/YXZ",
+                        "linkToSearchResultsAPI": "https://api.loganalytics.io/v1/subscriptions/SUBID/resourceGroups/RG/providers/Microsoft.ContainerService/managedClusters/RG/query?query=AzureDiagnosticsXYZ",
+                        "linkToFilteredSearchResultsAPI": "https://api.loganalytics.io/v1/subscriptions/SUBID/resourceGroups/RG/providers/Microsoft.ContainerService/managedClusters/RG/query?query=AzureDiagnosticsXYZ"
+                    }
+                ],
+                "windowStartTime": "2022-05-19T09:32:52Z",
+                "windowEndTime": "2022-05-19T09:37:52Z"
+            }
+        },
+        "customProperties": null
+    }
+}

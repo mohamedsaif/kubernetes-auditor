@@ -9,7 +9,7 @@
         "X-Content-Type-Options": "nosniff",
         "X-Frame-Options": "DENY",
         "Cache-Control": "no-store, no-cache",
-        "Set-Cookie": "ARRAffinity=e046345db0e7a8d87c17436215745a69963e10fae72c0a54896ed570777f22a6;Path=/;HttpOnly;Secure;Domain=azuremonitorlogs-we.azconn-we-003.p.azurewebsites.net,ARRAffinitySameSite=e046345db0e7a8d87c17436215745a69963e10fae72c0a54896ed570777f22a6;Path=/;HttpOnly;SameSite=None;Secure;Domain=azuremonitorlogs-we.azconn-we-003.p.azurewebsites.net",
+        "Set-Cookie": "ARRAffinity=;Path=/;HttpOnly;Secure;Domain=azuremonitorlogs-we.azconn-we-003.p.azurewebsites.net",
         "Timing-Allow-Origin": "*",
         "x-ms-apihub-cached-response": "false",
         "x-ms-apihub-obo": "true",
@@ -23,12 +23,12 @@
             {
                 "TenantId": "TENANTID",
                 "TimeGenerated": "2022-05-19T09:37:25Z",
-                "ResourceId": "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/AKS-WEU/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/AKS-WEU",
+                "ResourceId": "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/RG/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/RG",
                 "Category": "kube-audit-admin",
-                "ResourceGroup": "AKS-WEU",
+                "ResourceGroup": "RG",
                 "SubscriptionId": "SUBID",
                 "ResourceProvider": "MICROSOFT.CONTAINERSERVICE",
-                "Resource": "AKS-WEU",
+                "Resource": "AKS_CLUSTER_NAME",
                 "ResourceType": "MANAGEDCLUSTERS",
                 "OperationName": "Microsoft.ContainerService/managedClusters/diagnosticLogs/Read",
                 "ResultType": "",
@@ -149,17 +149,17 @@
                 "UnderlayName_s": "hcp-underlay-westeurope-cx-711",
                 "AdditionalFields": null,
                 "Type": "AzureDiagnostics",
-                "_ResourceId": "/subscriptions/SUBID/resourcegroups/aks-weu/providers/microsoft.containerservice/managedclusters/aks-weu"
+                "_ResourceId": "/subscriptions/SUBID/resourcegroups/RG/providers/microsoft.containerservice/managedclusters/RG"
             },
             {
                 "TenantId": "TENANTID",
                 "TimeGenerated": "2022-05-19T09:37:26Z",
-                "ResourceId": "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/AKS-WEU/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/AKS-WEU",
+                "ResourceId": "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/RG/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/RG",
                 "Category": "kube-audit-admin",
-                "ResourceGroup": "AKS-WEU",
+                "ResourceGroup": "AKS_CLUSTER_NAME",
                 "SubscriptionId": "SUBID",
                 "ResourceProvider": "MICROSOFT.CONTAINERSERVICE",
-                "Resource": "AKS-WEU",
+                "Resource": "RG",
                 "ResourceType": "MANAGEDCLUSTERS",
                 "OperationName": "Microsoft.ContainerService/managedClusters/diagnosticLogs/Read",
                 "ResultType": "",
@@ -280,17 +280,17 @@
                 "UnderlayName_s": "hcp-underlay-westeurope-cx-711",
                 "AdditionalFields": null,
                 "Type": "AzureDiagnostics",
-                "_ResourceId": "/subscriptions/SUBID/resourcegroups/aks-weu/providers/microsoft.containerservice/managedclusters/aks-weu"
+                "_ResourceId": "/subscriptions/SUBID/resourcegroups/RG/providers/microsoft.containerservice/managedclusters/RG"
             },
             {
                 "TenantId": "TENANTID",
                 "TimeGenerated": "2022-05-19T09:35:31Z",
-                "ResourceId": "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/AKS-WEU/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/AKS-WEU",
+                "ResourceId": "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/RG/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/RG",
                 "Category": "kube-audit-admin",
-                "ResourceGroup": "AKS-WEU",
+                "ResourceGroup": "RG",
                 "SubscriptionId": "SUBID",
                 "ResourceProvider": "MICROSOFT.CONTAINERSERVICE",
-                "Resource": "AKS-WEU",
+                "Resource": "AKS_CLUSTER_NAME",
                 "ResourceType": "MANAGEDCLUSTERS",
                 "OperationName": "Microsoft.ContainerService/managedClusters/diagnosticLogs/Read",
                 "ResultType": "",
@@ -411,17 +411,17 @@
                 "UnderlayName_s": "hcp-underlay-westeurope-cx-711",
                 "AdditionalFields": null,
                 "Type": "AzureDiagnostics",
-                "_ResourceId": "/subscriptions/SUBID/resourcegroups/aks-weu/providers/microsoft.containerservice/managedclusters/aks-weu"
+                "_ResourceId": "/subscriptions/SUBID/resourcegroups/RG/providers/microsoft.containerservice/managedclusters/RG"
             },
             {
                 "TenantId": "TENANTID",
                 "TimeGenerated": "2022-05-19T09:35:32Z",
-                "ResourceId": "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/AKS-WEU/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/AKS-WEU",
+                "ResourceId": "/SUBSCRIPTIONS/SUBID/RESOURCEGROUPS/RG/PROVIDERS/MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/RG",
                 "Category": "kube-audit-admin",
-                "ResourceGroup": "AKS-WEU",
+                "ResourceGroup": "RG",
                 "SubscriptionId": "SUBID",
                 "ResourceProvider": "MICROSOFT.CONTAINERSERVICE",
-                "Resource": "AKS-WEU",
+                "Resource": "RG",
                 "ResourceType": "MANAGEDCLUSTERS",
                 "OperationName": "Microsoft.ContainerService/managedClusters/diagnosticLogs/Read",
                 "ResultType": "",
@@ -542,7 +542,7 @@
                 "UnderlayName_s": "hcp-underlay-westeurope-cx-711",
                 "AdditionalFields": null,
                 "Type": "AzureDiagnostics",
-                "_ResourceId": "/subscriptions/SUBID/resourcegroups/aks-weu/providers/microsoft.containerservice/managedclusters/aks-weu"
+                "_ResourceId": "/subscriptions/SUBID/resourcegroups/RG/providers/microsoft.containerservice/managedclusters/RG"
             }
         ]
     }

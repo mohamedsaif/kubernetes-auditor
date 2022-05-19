@@ -139,3 +139,57 @@ The scenario I'm after here is to built a logic app that will be used as an acti
 The benefit of using Logic Apps here is the graphical designer, amazing amount of built-in connectors and sufficient workflow and data control components that can allow sophisticated and tailored notification experience.
 
 >NOTE: Although I'm using Microsoft Teams to post alert messages, you still can easily replace it with other connected systems.
+
+Before going into the details, below is the final logic app design:
+
+![logic-app-overview](./res/logic-app-overview.jpg)
+
+### Flow overview
+
+- Trigger: Logic app will be trigger based http post (posting will be initiated by Azure Alert)
+- Initialize results variable: to save the detected audit events to an array so it can be posted to a single message at the end
+- Executing Outer loop: Looping trough each record of 'allOf' part of the payload which each represent a an alert query result
+    - For each item, a query against Log Analytics workspace using the alert execution window to get the actual logs from the workspace (alerts no longer include the query results)
+    - Executing inner loop: to read the actual logs:
+        - Parsing Kubernetes Event: so the actual raw event will be saved in ```log_s``` field, so I'm parsing it to create output vairables to be used in the next step
+        - Reading the parsed fields from ```log_s``` and saved it as json object in the ```Actions``` array (include the time, user, url and verb).
+- Creating HTML Table: putting the Actions array into an HTML table for better presentation 
+- Posting to teams: a message stating the number of detected actions and a table of them (time, user, url and verb).
+
+Now let's construct the flow:
+
+### Creating new logic app
+
+Simply create a new logic app based on **Consumption** tier which will be sufficient for the needed scenario.
+
+![logic-app-new](./res/logic-app-new.jpg)
+
+This is the settings I went with:
+
+![logic-app-new-setup](./res/logic-app-new-setup.jpg)
+
+In a few seconds, the new logic app will be provisioned.
+
+Select **When a HTTP request is received** option from the common triggers:
+
+![logic-app-designer](./res/logic-app-designer.jpg)
+
+In the http designer, select **Use sample payload to generate schema**:
+
+![logic-app-http](./res/logic-app-http.jpg)
+
+Copy and past content from [log-alerts-v2-schema.json](./log-alerts-v2-schema.json) as a sample schema.
+
+![logic-app-http-schema](./res/logic-app-http-schema.jpg)
+
+Click the **+ New step** button to add Variables - Initialize Variable action:
+
+![logic-app-vars-setup](./res/logic-app-variables-setup.jpg)
+
+Create a new Control - For each action as our outer loop to go through the allOf array of the received http payload:
+
+![logic-app-outer-loop](./res/logic-app-outer-loop.jpg)
+
+It is now time to retrieve the actual results from Log workspace through Azure Monitor Logs - Run query and list results action:
+
+![logic-app-log-search](./res/logic-app-log-search.jpg)
