@@ -1,11 +1,13 @@
 # Kubernetes-Auditor
-Utilizing Azure Monitor capabilities to raise alerts based on specific Kubernetes audit logs
+Utilizing Azure Monitor capabilities to raise alerts based on specific Kubernetes audit logs and send them in a timely fashion as direct MS Teams messages.
 
 ## Overview 
 
 In highly regulated deployments of AKS clusters, you might want to keep close eye on audit logs.
 
-AKS diagnostic logs have many categories which can help in answering questions like:
+This applies to many deployed systems, but here I'm focusing on Kubernetes audit logs.
+
+For AKS diagnostic logs, you have many categories which can help in answering questions like:
 
 - What happened?
 - When did it happen?
@@ -15,7 +17,7 @@ AKS diagnostic logs have many categories which can help in answering questions l
 - From where was it initiated?
 - To where was it going?
 
-In this repo, I explore how we can leverage AKS diagnostic settings along with Azure Monitor to setup alerts that are pushed to different channels to keep close eye on Kubernetes API calls.
+In this repo, I explore how we can leverage AKS diagnostic settings along with Azure Monitor to setup alerts that are pushed to different channels (like Microsoft Teams) to keep close eye on Kubernetes API calls for specific events.
 
 ## Understand AKS logs
 
@@ -222,3 +224,67 @@ Results should look like this:
 ![logic-app-run-results](./res/logic-app-run-results.jpg)
 
 ![logic-app-run-results-table](./res/logic-app-run-results-table.jpg)
+
+## Alert rule action group
+
+Now it is time to link the newly created logic app notifier to the alert rule.
+
+By going back to the created alert rule (I named it AKS-CoreDNS-Create-Alert), click on it to edit:
+
+![new-alert-edit-actions](./res/new-alert-edit-actions.jpg)
+
+Action groups actually are independent resource from the alert, so you can share the same action group with many alerts that you can select from the list of previously created ones.
+
+Also it is worth mentioning you can invoke multiple action groups as well.
+
+I will assume that this is the first action group to be created, so I will select **Create action group**:
+
+![new-alert-action-new](./res/new-alert-action-new.jpg)
+
+Type in your preferences for resource group, name and display name:
+
+![new-action-group](./res/new-action-group.jpg)
+
+I will not edit anything in the Notifications tab, so I will head directly to the Actions tab.
+
+In the Action type, select Logic App then browse in the popup pane to the correct logic app then give it a friendly name:
+
+![new-action-group-action](./res/new-action-group-actions.jpg)
+
+Finally create the new action group and select it for your alert actions:
+
+Now it about waiting for the alert to be fired to see the messages being posted to the selected Microsoft Teams channel:
+
+![teams-messages](./res/teams-messages.jpg)
+
+## Conclusion
+
+This is a highly customizable approach to leverage Azure Monitor Alerts to receive critical notifications in a timely fashion for your various scenarios.
+
+I would recommend applying this as part of a larger strategy for alerts that include other critical alerts that you might want to be delivered (i.e. service availability, cluster health, auto scaling events,...)
+
+In this central approach, you can create dedicated resource groups for alerts, actions and log analytics workspaces.
+
+## About the project
+
+I tried to make sure I covered all aspects and best practices while building this project, but all included architecture, code, documentation, and any other artifacts represent my personal opinion only. Think of it as one suggested way in which this platform could be built.
+
+Keep in mind that this is a work-in-progress, and I will continue to contribute to it when I can.
+
+All constructive feedback is welcomed 🙏
+
+## Support
+
+You can always create issue, suggest an update through PR or direct message me on [Twitter](https://twitter.com/mohamedsaif101).
+
+## Author
+
+|      ![Photo](res/mohamed-saif.jpg)            |
+|:----------------------------------------------:|
+|                 **Mohamed Saif**               |
+|     [GitHub](https://github.com/mohamedsaif)   |
+|  [Twitter](https://twitter.com/mohamedsaif101) |
+
+## License
+
+All documentations and samples are licensed with the MIT License. For more details, see [LICENSE](LICENSE)
