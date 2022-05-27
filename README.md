@@ -1,7 +1,7 @@
 # Kubernetes-Auditor
 Utilizing Azure Monitor capabilities to raise alerts based on specific Kubernetes audit logs and send them in a timely fashion as direct MS Teams messages.
 
-## Overview 
+## Overview
 
 In highly regulated deployments of AKS clusters, you might want to keep close eye on audit logs.
 
@@ -66,7 +66,7 @@ AzureDiagnostics
 
 ```
 
-Play with the time ranges and different where cluases to optimize the query that you need.
+Play with the time ranges and different where clauses to optimize the query that you need.
 
 ### Selecting alert query(s)
 
@@ -153,7 +153,7 @@ Before going into the details, below is the final logic app design:
 - Executing Outer loop: Looping trough each record of 'allOf' part of the payload which each represent a an alert query result
     - For each item, a query against Log Analytics workspace using the alert execution window to get the actual logs from the workspace (alerts no longer include the query results)
     - Executing inner loop: to read the actual logs:
-        - Parsing Kubernetes Event: so the actual raw event will be saved in ```log_s``` field, so I'm parsing it to create output vairables to be used in the next step
+        - Parsing Kubernetes Event: so the actual raw event will be saved in ```log_s``` field, so I'm parsing it to create output variables to be used in the next step
         - Reading the parsed fields from ```log_s``` and saved it as json object in the ```Actions``` array (include the time, user, url and verb).
 - Creating HTML Table: putting the Actions array into an HTML table for better presentation 
 - Posting to teams: a message stating the number of detected actions and a table of them (time, user, url and verb).
